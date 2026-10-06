@@ -22,6 +22,10 @@ jobs:
 
       - run: npm ci
 
+      - run: |
+          getent hosts ep-blue-night-b8v5470e.c-14.us-east-1.aws.neon.tech || echo "getent failed"
+          node -e "require('dns').promises.lookup('ep-blue-night-b8v5470e.c-14.us-east-1.aws.neon.tech').then(a => console.log('node dns lookup ok', a)).catch(e => console.log('node dns lookup failed', e.code))"
+
       - run: node fetchNews.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
