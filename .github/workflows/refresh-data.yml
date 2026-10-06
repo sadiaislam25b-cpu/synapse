@@ -22,11 +22,6 @@ jobs:
 
       - run: npm ci
 
-      - run: node debug-fetch.mjs
-        env:
-          GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
       - run: node fetchNews.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
