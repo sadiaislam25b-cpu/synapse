@@ -48,6 +48,8 @@ export async function fetchNews() {
         console.log(`News saved: ${saved} new, ${skipped} skipped as off-topic`);
     } catch (err) {
         console.error("News fetch failed:", err.message);
+        console.error("FULL ERROR DEBUG:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
+        console.error("CAUSE DEBUG:", err.cause);
     }
 }
 
