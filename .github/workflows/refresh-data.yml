@@ -22,10 +22,9 @@ jobs:
 
       - run: npm ci
 
-      - run: |
-          node -e "import('./db.js').then(() => fetch('https://content.guardianapis.com')).then(r => console.log('fetch after db.js import, status', r.status)).catch(e => console.log('fetch after db.js import, ERROR', e))"
+      - run: node debug-fetch.mjs
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
 
       - run: node fetchNews.js
         env:
