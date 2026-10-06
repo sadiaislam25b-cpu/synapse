@@ -8,8 +8,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import "dotenv/config";
 import pool from "./db.js";
-import { fetchNews } from "./fetchNews.js";
-import { fetchPapers } from "./fetchPapers.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -302,12 +300,6 @@ app.get("/api/saves", requireAuth, async (req, res) => {
         return res.status(500).json({ error: "Could not load saved items." });
     }
 });
-
-const SIX_HOURS = 6 * 60 * 60 * 1000;
-setInterval(() => {
-    fetchNews();
-    fetchPapers();
-}, SIX_HOURS);
 
 async function start() {
     await initializeDatabase();

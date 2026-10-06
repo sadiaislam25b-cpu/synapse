@@ -1,0 +1,32 @@
+name: Refresh news and papers
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - run: npm ci
+
+      - run: node fetchNews.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
+
+      - run: node fetchPapers.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
