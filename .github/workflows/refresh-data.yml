@@ -22,6 +22,12 @@ jobs:
 
       - run: npm ci
 
+      - run: |
+          node -e "console.log(process.version)"
+          curl -sS -o /dev/null -w "guardian: %{http_code}\n" https://content.guardianapis.com
+          curl -sS -o /dev/null -w "arxiv: %{http_code}\n" https://export.arxiv.org
+          node -e "fetch('https://content.guardianapis.com').then(r => console.log('node fetch status', r.status)).catch(e => console.log('node fetch error', e))"
+
       - run: node fetchNews.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
