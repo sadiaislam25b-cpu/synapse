@@ -13,6 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const PostgresStore = pgSession(session);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const isProduction = process.env.NODE_ENV === "production";
+
+if (isProduction) {
+    app.set("trust proxy", 1);
+}
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
@@ -31,7 +36,7 @@ app.use(
         cookie: {
             httpOnly: true,
             sameSite: "lax",
-            secure: false,
+            secure: isProduction,
             maxAge: 1000 * 60 * 60 * 24 * 7,
         },
     })
@@ -300,6 +305,14 @@ app.get("/api/saves", requireAuth, async (req, res) => {
         return res.status(500).json({ error: "Could not load saved items." });
     }
 });
+
+if (isProduction) {
+    const clientDist = path.join(__dirname, "../client/dist");
+    app.use(express.static(clientDist));
+    app.use((req, res) => {
+        res.sendFile(path.join(clientDist, "index.html"));
+    });
+}
 
 async function start() {
     await initializeDatabase();
